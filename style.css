@@ -44,15 +44,29 @@ div.info {
   z-index: 1;
   margin-top: -13px;
   user-select: none;
-  
 }
 
 .resize1 {
-  cursor: se-resize !important;
+  cursor: nw-resize !important;
 }
 .resize2 {
-  cursor: e-resize !important;
+  cursor: n-resize !important;
 }
 .resize3 {
+  cursor: ne-resize !important;
+}
+.resize4 {
+  cursor: e-resize !important;
+}
+.resize5 {
+  cursor: se-resize !important;
+}
+.resize6 {
   cursor: s-resize !important;
+}
+.resize7 {
+  cursor: sw-resize !important;
+}
+.resize8 {
+  cursor: w-resize !important;
 }
