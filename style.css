@@ -1,0 +1,42 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+div.area {
+  border-width: 1px;
+  border-style: solid;
+  height: 500px;
+  width: 500px;
+  position: relative;
+  z-index: 2;
+  background-color: transparent;
+}
+
+div.rect {
+  border-width: 1px;
+  border-style: dashed;
+  border-color: red;
+  position: absolute;
+}
+
+div.info {
+  position: absolute;
+  width: 90px;
+  height: 18px;
+  text-align: center;
+  background-color: brown;
+  color: white;
+  font-weight: bold;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  z-index: 1;
+  margin-top: -20px;
+  visibility: hidden;
+}
