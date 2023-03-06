@@ -13,11 +13,10 @@ body {
 div.area {
   border-width: 1px;
   border-style: solid;
-  height: 500px;
-  width: 500px;
   position: relative;
   z-index: 2;
   background-color: transparent;
+  margin: 5px;
 }
 
 div.rect {
@@ -26,17 +25,24 @@ div.rect {
   border-color: red;
   position: absolute;
 }
+div.rect:hover {
+  cursor: grab;
+}
+div.rect:active {
+  cursor: grabbing;
+}
 
 div.info {
   position: absolute;
-  width: 90px;
-  height: 18px;
+  width: 50px;
+  height: 12px;
   text-align: center;
   background-color: brown;
   color: white;
-  font-weight: bold;
-  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-family: "Arial", sans-serif;
+  font-size: 10px;
   z-index: 1;
-  margin-top: -20px;
-  visibility: hidden;
+  margin-top: -13px;
+  user-select: none;
+  
 }
