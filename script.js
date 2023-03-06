@@ -25,6 +25,7 @@ var RectangleDrawer = {
     var top, left; // reactangle current position
     var width, height; // rectangle current size
     var newTop, newLeft; // position while moving
+    var resizing = 0;
 
     function createRect() {
       if (!rectangle) {
@@ -57,21 +58,25 @@ var RectangleDrawer = {
         var xDiffLen = Math.abs(xDiff);
         var yDiffLen = Math.abs(yDiff);
 
-        top = yDiff < 0 ? firstTop - yDiffLen : firstTop;
-        top = top < 0 ? 0 : top;
-        rectangle.style.top = top + "px";
+        if (resizing != 2) { // if not vertical scaling
+          top = yDiff < 0 ? firstTop - yDiffLen : firstTop;
+          top = top < 0 ? 0 : top;
+          rectangle.style.top = top + "px";
 
-        left = xDiff < 0 ? firstLeft - xDiffLen : firstLeft;
-        left = left < 0 ? 0 : left;
-        rectangle.style.left = left + "px";
+          height = top + yDiffLen > size ? size - 2 - top : yDiffLen;
+          height = y < 0 ? firstTop : height;
+          rectangle.style.height = height + "px";
+        }
 
-        width = left + xDiffLen > size ? size - 2 - left : xDiffLen;
-        width = x < 0 ? firstLeft : width;
-        rectangle.style.width = width + "px";
+        if (resizing != 3) { // if not horizontal scaling
+          left = xDiff < 0 ? firstLeft - xDiffLen : firstLeft;
+          left = left < 0 ? 0 : left;
+          rectangle.style.left = left + "px";
 
-        height = top + yDiffLen > size ? size - 2 - top : yDiffLen;
-        height = y < 0 ? firstTop : height;
-        rectangle.style.height = height + "px";
+          width = left + xDiffLen > size ? size - 2 - left : xDiffLen;
+          width = x < 0 ? firstLeft : width;
+          rectangle.style.width = width + "px";
+        }
 
         text.innerHTML = xDiffLen + " x " + yDiffLen;
         alignTextPosition();
@@ -79,16 +84,44 @@ var RectangleDrawer = {
     }
 
     var onRectMouseDown = function (event) {
-      picked = true;
-      pickedTop = event.y;
-      pickedLeft = event.x;
+      var x = event.x;
+      var y = event.y;
+      resizing = getResizing(x, y);
+
+      if (resizing == 0) {
+        picked = true;
+        pickedTop = y;
+        pickedLeft = x;
+      } else {
+        drawing = true;
+      }
+
     };
 
+    function getResizing(x, y) {
+      var _resizing = 0;
+      var _top = gapY + top;
+      var _left = gapX + left;
+      var bottom = _top + height;
+      var right = _left + width;
+      if ((x + 8 > right && y > _top)) {
+        _resizing = 2; // horizontal
+      }
+      if ((y + 8 > bottom && x > _left)) {
+        _resizing = 3; // vertical
+      }
+      if (y + 8 > bottom && x + 8 > right) {
+        _resizing = 1; // both
+      }
+      return _resizing;
+    }
+
     var onAreaMouseDown = function (event) {
-      if (!drawing && !picked) {
+      if (!drawing && !picked && resizing == 0) {
         clearRect();
         gapX = event.x - event.offsetX;
         gapY = event.y - event.offsetY;
+        console.log("gapY=" + gapY + " gapX=" + gapX)
         firstLeft = event.x - gapX;
         firstTop = event.y - gapY;
         createRect();
@@ -113,25 +146,48 @@ var RectangleDrawer = {
       text.style.left = rectangle.style.left;
     }
 
-    var onMouseMove = function (event) {
+    var onDocumentMouseMove = function (event) {
+      var x = event.x;
+      var y = event.y;
       if (drawing) {
-        draw(event.x - gapX, event.y - gapY);
+        draw(x - gapX, y - gapY);
       }
       if (picked) {
-        move(event.x, event.y);
+        move(x, y);
+      }
+      if (rectangle) {
+        var r = getResizing(x, y);
+        clearResizeCursor();
+        if (r > 0) {
+          rectangle.classList.add("resize" + r);
+        }
       }
     };
-    var onMouseUp = function (event) {
-      drawing = false;
-      picked = false;
-      if (newTop && newLeft) {
+
+    function clearResizeCursor() {
+      rectangle.classList.remove("resize1");
+      rectangle.classList.remove("resize2");
+      rectangle.classList.remove("resize3");
+    }
+
+    var onDocumentMouseUp = function (event) {
+      if (picked) {
         top = newTop;
         left = newLeft;
+        firstTop = top;
+        firstLeft = left;
       }
+      if (drawing) {
+        firstTop = top;
+        firstLeft = left;
+      }
+      drawing = false;
+      picked = false;
+      resizing = 0;
     }
 
     div.addEventListener("mousedown", onAreaMouseDown);
-    document.addEventListener("mouseup", onMouseUp);
-    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onDocumentMouseUp);
+    document.addEventListener("mousemove", onDocumentMouseMove);
   }
 };

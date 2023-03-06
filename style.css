@@ -46,3 +46,13 @@ div.info {
   user-select: none;
   
 }
+
+.resize1 {
+  cursor: se-resize !important;
+}
+.resize2 {
+  cursor: e-resize !important;
+}
+.resize3 {
+  cursor: s-resize !important;
+}
