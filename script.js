@@ -78,7 +78,7 @@ var RectangleDrawer = {
           rectangle.style.width = width + "px";
         }
 
-        text.innerHTML = xDiffLen + " x " + yDiffLen;
+        text.innerHTML = width + " x " + height;
         alignTextPosition();
       }
     }
